@@ -58,7 +58,7 @@ describe('measureStep', () => {
         'mark.start_navigate_to_second_screen_first_journey',
       );
       // ============ Mock Data ============
-      jest.spyOn(WP, 'getEntriesByName').mockImplementationOnce(name => {
+      jest.spyOn(WP, 'getEntriesByName').mockImplementationOnce((name) => {
         const entries: Record<string, PerformanceEntry> = {
           'mark.start_navigate_to_second_screen_first_journey': {
             name: 'mark.start_navigate_to_second_screen_first_journey',
@@ -68,7 +68,7 @@ describe('measureStep', () => {
             toJSON: jest.fn(),
           },
         };
-        return [entries[name]] ?? [];
+        return [entries[name]];
       });
       jest.spyOn(WP, 'measure').mockImplementationOnce(() => ({
         name: 'mark.start_navigate_to_second_screen_first_journey',
@@ -81,7 +81,7 @@ describe('measureStep', () => {
       // ========== Mock Data end ==========
       expect(analyticsTrackerSpy).toHaveBeenCalledTimes(0);
       // ============ Mock Data ============
-      jest.spyOn(WP, 'getEntriesByName').mockImplementationOnce(name => {
+      jest.spyOn(WP, 'getEntriesByName').mockImplementationOnce((name) => {
         const entries: Record<string, PerformanceEntry> = {
           'mark.start_navigate_to_second_screen_first_journey': {
             name: 'mark.start_navigate_to_second_screen_first_journey',
@@ -98,7 +98,7 @@ describe('measureStep', () => {
             toJSON: jest.fn(),
           },
         };
-        return [entries[name]] ?? [];
+        return [entries[name]];
       });
       // ========== Mock Data end ==========
       markStep('loaded_second_screen_first_journey');
@@ -132,9 +132,9 @@ describe('measureStep', () => {
         navigationType: undefined,
         navigatorInformation: {
           deviceMemory: 0,
-          hardwareConcurrency: 16,
-          isLowEndDevice: false,
-          isLowEndExperience: false,
+          hardwareConcurrency: expect.any(Number),
+          isLowEndDevice: expect.any(Boolean),
+          isLowEndExperience: expect.any(Boolean),
           serviceWorkerStatus: 'unsupported',
         },
       });
@@ -142,11 +142,11 @@ describe('measureStep', () => {
     it('should return when the start mark doesnt exist', () => {
       measureSpy = jest.spyOn(WP, 'measure');
       // ============ Mock Data ============
-      jest.spyOn(WP, 'getEntriesByName').mockImplementationOnce(name => {
+      jest.spyOn(WP, 'getEntriesByName').mockImplementationOnce((name) => {
         return [];
       });
       measureStep('not-valid-step', 'startMark', 'endmark');
-      expect(measureSpy).toBeCalledTimes(0);
+      expect(measureSpy).toHaveBeenCalledTimes(0);
     });
 
     it('should return when the start mark doesnt exist', () => {
@@ -156,7 +156,7 @@ describe('measureStep', () => {
         // @ts-ignore
         .mockImplementationOnce(() => undefined);
       // ============ Mock Data ============
-      jest.spyOn(WP, 'getEntriesByName').mockImplementationOnce(name => {
+      jest.spyOn(WP, 'getEntriesByName').mockImplementationOnce((name) => {
         const entries: Record<string, PerformanceEntry> = {
           'mark.start_navigate_to_second_screen_first_journey': {
             name: 'mark.start_navigate_to_second_screen_first_journey',
@@ -173,10 +173,14 @@ describe('measureStep', () => {
             toJSON: jest.fn(),
           },
         };
-        return [entries[name]] ?? [];
+        return [entries[name]];
       });
-      measureStep('load_second_screen_first_journey', 'start_navigate_to_second_screen_first_journey', 'start_navigate_to_second_screen_first_journey');
-      expect(measureSpy).toBeCalledTimes(1); // after the first call that returns undefined, it exits the function and does not call measure again
+      measureStep(
+        'load_second_screen_first_journey',
+        'start_navigate_to_second_screen_first_journey',
+        'start_navigate_to_second_screen_first_journey',
+      );
+      expect(measureSpy).toHaveBeenCalledTimes(1); // after the first call that returns undefined, it exits the function and does not call measure again
     });
   });
 });

@@ -2,7 +2,7 @@ import { logMetric } from './log';
 import { IPerformanceEntry } from './types';
 
 export const initElementTiming = (performanceEntries: IPerformanceEntry[]) => {
-  performanceEntries.forEach(entry => {
+  performanceEntries.forEach((entry) => {
     if (entry.identifier) {
       logMetric({
         attribution: {

@@ -1,6 +1,6 @@
 {
-  "name": "perfume",
-  "version": "1.0.0",
+  "name": "@tinkoff/perfume",
+  "version": "0.0.0-stub",
   "description": "Web performance library for measuring all User-centric performance metrics, including the latest Web Vitals.",
   "type": "module",
   "main": "dist/index.mjs",
@@ -12,14 +12,14 @@
   "author": "Leonardo Zizzamia",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Zizzamia/perfume.js.git"
+    "url": "https://github.com/tramvaijs/perfume"
   },
   "license": "MIT",
   "engines": {
     "node": ">=22.23.4"
   },
   "scripts": {
-    "lint": "eslint -c .eslintrc.js --ext .ts src",
+    "lint": "eslint src",
     "prebuild": "rimraf dist",
     "build": "tsdown",
     "start": "tsdown -w",
@@ -43,6 +43,7 @@
     "jest-environment-jsdom": "^30.5.2",
     "prettier": "^3.9.10",
     "rimraf": "3.0.2",
+    "semantic-release": "^25.0.9",
     "ts-jest": "^29.4.15",
     "tsdown": "^0.23.1",
     "typescript": "^6"

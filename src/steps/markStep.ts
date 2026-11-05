@@ -36,12 +36,16 @@ export const start = (markName: string): void => {
   metrics[markName] = true;
   // Creates a timestamp in the browser's performance entry buffer
   WP.mark(`mark_${markName}_start`);
-}
+};
 
 /**
  * End performance measurement
  */
- export const end = (markName: string, customProperties = {}, doLogData = true): void => {
+export const end = (
+  markName: string,
+  customProperties = {},
+  doLogData = true,
+): void => {
   if (!isPerformanceSupported() || !metrics[markName]) {
     return;
   }
@@ -52,12 +56,12 @@ export const start = (markName: string): void => {
   if (doLogData) {
     logData(markName, roundByFour(measure), customProperties);
   }
-}
+};
 
 /**
  * Removes the named mark from the browser's performance entry buffer.
  */
- export const clear = (markName: string): void => {
+export const clear = (markName: string): void => {
   delete metrics[markName];
   // Mobile Safari v13 and UC Browser v11
   // don't support clearMarks yet
@@ -66,4 +70,4 @@ export const start = (markName: string): void => {
   }
   WP.clearMarks(`mark_${markName}_start`);
   WP.clearMarks(`mark_${markName}_end`);
-}
+};

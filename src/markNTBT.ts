@@ -24,7 +24,7 @@ let ntbtTimeoutID = 0;
  *
  * Credit: Thank you Steven Lam for helping with this!
  */
- export const markNTBT = (): void => {
+export const markNTBT = (): void => {
   start('ntbt');
   // Reset NTBT value
   ntbt.value = 0;

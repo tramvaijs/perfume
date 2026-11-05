@@ -14,22 +14,22 @@ import { po } from './performanceObserver';
 import { initResourceTiming } from './resourceTiming';
 
 export const initPerformanceObserver = (): void => {
-  onTTFB(report => {
+  onTTFB((report) => {
     if (report.value > 0) {
       // @ts-ignore
       logMetric(report);
     }
   }, config.reportOptions.ttfb);
   // @ts-ignore
-  onCLS(report => logMetric(report), config.reportOptions.cls);
+  onCLS((report) => logMetric(report), config.reportOptions.cls);
   // @ts-ignore
-  onFCP(report => logMetric(report), config.reportOptions.fcp);
+  onFCP((report) => logMetric(report), config.reportOptions.fcp);
   // @ts-ignore
-  onFID(report => logMetric(report), config.reportOptions.fid);
+  onFID((report) => logMetric(report), config.reportOptions.fid);
   // @ts-ignore
-  onLCP(report => logMetric(report), config.reportOptions.lcp);
+  onLCP((report) => logMetric(report), config.reportOptions.lcp);
   // @ts-ignore
-  onINP(report => logMetric(report), config.reportOptions.inp);
+  onINP((report) => logMetric(report), config.reportOptions.inp);
 
   if (config.isResourceTiming) {
     po('resource', initResourceTiming);

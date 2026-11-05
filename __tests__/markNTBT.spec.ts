@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { C, WN, WP } from '../src/constants';
-import { initPerfume } from '../src/perfume';
+import { initPerfume } from '../src';
 import { markNTBT } from '../src/markNTBT';
 import { ntbt } from '../src/metrics';
 import * as observe from '../src/observe';
@@ -11,8 +11,6 @@ import { visibility } from '../src/onVisibilityChange';
 import mock from './_mock';
 
 describe('Perfume', () => {
-  let spy: jest.SpyInstance;
-
   beforeEach(() => {
     (WN as any) = mock.navigator();
     (WP as any) = mock.performance();
@@ -22,13 +20,6 @@ describe('Perfume', () => {
     (window as any).console.warn = (n: any) => n;
     (observe as any).perfObservers = {};
     visibility.isHidden = false;
-  });
-
-  afterEach(() => {
-    if (spy) {
-      spy.mockReset();
-      spy.mockRestore();
-    }
   });
 
   describe('markNTBT()', () => {

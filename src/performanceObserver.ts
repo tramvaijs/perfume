@@ -11,7 +11,7 @@ export const po = (
   cb: (performanceEntries: any[]) => void,
 ): PerformanceObserver | null => {
   try {
-    const perfObserver = new PerformanceObserver(entryList => {
+    const perfObserver = new PerformanceObserver((entryList) => {
       cb(entryList.getEntries());
     });
     // Retrieve buffered events and subscribe to newer events for Paint Timing

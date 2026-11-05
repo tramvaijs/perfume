@@ -13,16 +13,17 @@ export const measureSteps = (mark: string) => {
     recordEndMark(mark);
     // this is an end mark so we delete the entry
     const finalSteps = steps.finalMarkToStepsMap[mark];
-    Object.keys(finalSteps).forEach(startMark => {
+    Object.keys(finalSteps).forEach((startMark) => {
       const possibleSteps = finalSteps[startMark];
       possibleSteps.forEach(removeActiveStep);
-      // Async processing all possible steps 
+      // Async processing all possible steps
       // needs to be async due to clearing previously measured steps and marks.
-      // If we run all concurrently, there is a chance for a race condition 
+      // If we run all concurrently, there is a chance for a race condition
       // where we are adding and deleteing the entries in WP.Performance which caused the measure to fail.
       Promise.all(
-        possibleSteps.map(async step => {
+        possibleSteps.map(async (step) => {
           // measure
+          // eslint-disable-next-line @typescript-eslint/await-thenable
           await measureStep(step, startMark, mark);
         }),
       ).catch(() => {

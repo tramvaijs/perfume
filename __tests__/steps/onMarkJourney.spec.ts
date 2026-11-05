@@ -10,19 +10,11 @@ import { config } from '../../src/config';
 import { testConfig } from '../stepsTestConstants';
 
 describe('markStep', () => {
-  let spy: jest.SpyInstance;
   let onMarkStepSpy: jest.SpyInstance;
 
   beforeEach(() => {
     (WP as any) = mock.performance();
     initPerfume(testConfig);
-  });
-
-  afterEach(() => {
-    if (spy) {
-      spy.mockReset();
-      spy.mockRestore();
-    }
   });
 
   describe('callback onMarkStep', () => {
