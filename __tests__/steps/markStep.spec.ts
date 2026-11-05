@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { C, WN, WP } from '../../src/constants';
-import { initPerfume } from '../../src/perfume';
+import { initPerfume } from '../../src';
 import * as log from '../../src/log';
 import { metrics } from '../../src/metrics';
 import * as observe from '../../src/observe';

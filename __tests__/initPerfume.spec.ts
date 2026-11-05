@@ -16,8 +16,6 @@ jest.mock('../src/isSupported', () => ({
 }));
 
 describe('Perfume', () => {
-  let spy: jest.SpyInstance;
-
   beforeEach(() => {
     (WN as any) = mock.navigator();
     (WP as any) = mock.performance();
@@ -28,13 +26,6 @@ describe('Perfume', () => {
     (observe as any).perfObservers = {};
     visibility.isHidden = false;
     (isPerformanceSupported as jest.Mock).mockImplementation(() => true);
-  });
-
-  afterEach(() => {
-    if (spy) {
-      spy.mockReset();
-      spy.mockRestore();
-    }
   });
 
   describe('constructor', () => {
