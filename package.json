@@ -19,7 +19,7 @@
     "node": ">=22.23.4"
   },
   "scripts": {
-    "lint": "eslint -c .eslintrc.js --ext .ts src",
+    "lint": "eslint src",
     "prebuild": "rimraf dist",
     "build": "tsdown",
     "start": "tsdown -w",
