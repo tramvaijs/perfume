@@ -4,7 +4,7 @@ import { IPerformanceEntry } from './types';
 export const initTotalBlockingTime = (
   performanceEntries: IPerformanceEntry[],
 ): void => {
-  performanceEntries.forEach(entry => {
+  performanceEntries.forEach((entry) => {
     if (entry.name !== 'self' || entry.startTime < fcp.value) {
       return;
     }

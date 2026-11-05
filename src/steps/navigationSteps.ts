@@ -27,7 +27,7 @@ export const getActiveStepsFromNavigationSteps = (): Record<
 
   Object.keys(currentNavStep).forEach((startMark: string) => {
     const ongoingSteps = startMarkToStepsMap[startMark] ?? [];
-    Object.keys(ongoingSteps).forEach(step => {
+    Object.keys(ongoingSteps).forEach((step) => {
       activeSteps[step] = true;
     });
   });
@@ -38,7 +38,7 @@ export const getActiveStepsFromNavigationSteps = (): Record<
 
     Object.keys(prevNavStep).forEach((startMark: string) => {
       const prevNavSteps = startMarkToStepsMap[startMark] ?? [];
-      Object.keys(prevNavSteps).forEach(step => {
+      Object.keys(prevNavSteps).forEach((step) => {
         activeSteps[step] = true;
       });
     });
@@ -86,7 +86,7 @@ export const recordEndMark = (endMark: string) => {
    * loop through all steps where end mark is present and check if their start mark is present
    * in the navigation state. If so, remove it to signal that the step has been completed
    */
-  Object.keys(endMarkMap).forEach(startMark => {
+  Object.keys(endMarkMap).forEach((startMark) => {
     if (ongoingNavStep[startMark]) {
       const currentNavStep = getStepsFromNavigation(currentNavIndex) || {};
 

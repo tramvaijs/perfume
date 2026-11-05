@@ -29,7 +29,7 @@ export const steps = {
 export const addActiveSteps = (startMark: string) => {
   const newSteps = steps.startMarkToStepsMap[startMark] ?? [];
   // adding the new steps to the active map
-  Object.keys(newSteps).forEach(step => {
+  Object.keys(newSteps).forEach((step) => {
     if (steps.active[step]) {
       return;
     } else {
@@ -40,7 +40,7 @@ export const addActiveSteps = (startMark: string) => {
 
 export const resetNavigationSteps = () => {
   steps.navigationSteps = {};
-}
+};
 
 /**
  * Removes one step from active steps
@@ -61,9 +61,9 @@ export const resetSteps = () => {
   resetNavigationSteps();
 };
 
-export const getNavigationState = () => steps.navigationSteps 
+export const getNavigationState = () => steps.navigationSteps;
 
-export const getStepsFromNavigation = (navIndex: number) =>  {
+export const getStepsFromNavigation = (navIndex: number) => {
   const navigationSteps = getNavigationState();
   return navigationSteps[navIndex] ?? {};
-}
+};

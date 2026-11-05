@@ -14,7 +14,7 @@ export const logData = (
   metric: any,
   attribution?: object,
 ): void => {
-  Object.keys(metric).forEach(key => {
+  Object.keys(metric).forEach((key) => {
     if (typeof metric[key] === 'number') {
       metric[key] = roundByFour(metric[key]);
     }

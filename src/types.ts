@@ -143,13 +143,7 @@ export type IPerformanceObserverType =
   | 'resource';
 
 export type IPerformanceEntryInitiatorType =
-  | 'beacon'
-  | 'css'
-  | 'fetch'
-  | 'img'
-  | 'other'
-  | 'script'
-  | 'xmlhttprequest';
+  'beacon' | 'css' | 'fetch' | 'img' | 'other' | 'script' | 'xmlhttprequest';
 
 export declare interface IPerformanceEntry {
   decodedBodySize?: number;
@@ -211,18 +205,12 @@ export interface IPerfumeDataConsumption {
 }
 
 export type IPerfumeData =
-  | number
-  | IPerfumeNavigationTiming
-  | IPerfumeNetworkInformation;
+  number | IPerfumeNavigationTiming | IPerfumeNetworkInformation;
 
 export type IVitalsScore = 'good' | 'needsImprovement' | 'poor' | null;
 
 export type INavigationType =
-  | 'navigate'
-  | 'reload'
-  | 'back-forward'
-  | 'back-forward-cache'
-  | 'prerender';
+  'navigate' | 'reload' | 'back-forward' | 'back-forward-cache' | 'prerender';
 
 export interface IVitalsThresholds {
   vitalsThresholds: [number, number];
