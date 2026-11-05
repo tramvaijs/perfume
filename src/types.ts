@@ -8,7 +8,6 @@ export interface Metric {
     | 'CLS'
     | 'FCP'
     | 'FID'
-    | 'INP'
     | 'LCP'
     | 'TTFB'
     | 'RT'

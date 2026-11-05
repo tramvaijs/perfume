@@ -23,6 +23,7 @@ export const measureSteps = (mark: string) => {
       Promise.all(
         possibleSteps.map(async (step) => {
           // measure
+          // eslint-disable-next-line @typescript-eslint/await-thenable
           await measureStep(step, startMark, mark);
         }),
       ).catch(() => {

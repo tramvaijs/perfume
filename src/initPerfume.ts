@@ -58,7 +58,10 @@ export const initPerfume = (options: IPerfumeOptions = {}) => {
   logData('networkInformation', getNetworkInformation());
   // Let's estimate our storage capacity
   if (WN && WN.storage && typeof WN.storage.estimate === 'function') {
-    WN.storage.estimate().then(reportStorageEstimate);
+    WN.storage
+      .estimate()
+      .then(reportStorageEstimate)
+      .catch(() => {});
   }
   // initializing Steps if present
   if (config.steps) {

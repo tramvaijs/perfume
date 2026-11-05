@@ -10,9 +10,6 @@ export default defineConfig([
     files: ["src/**/*.ts"],
     extends: [...tseslint.configs["flat/recommended-type-checked"]],
     languageOptions: {
-      globals: {
-        ...globals.browser,
-      },
       parserOptions: {
         projectService: true,
       },

@@ -32,9 +32,9 @@ export const addActiveSteps = (startMark: string) => {
   Object.keys(newSteps).forEach((step) => {
     if (steps.active[step]) {
       return;
-    } else {
-      steps.active[step] = true;
     }
+
+    steps.active[step] = true;
   });
 };
 
