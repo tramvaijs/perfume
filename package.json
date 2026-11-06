@@ -3,9 +3,9 @@
   "version": "0.0.0-stub",
   "description": "Web performance library for measuring all User-centric performance metrics, including the latest Web Vitals.",
   "type": "module",
-  "main": "dist/index.mjs",
-  "module": "dist/index.mjs",
-  "typings": "dist/types/index.d.mts",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "typings": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
