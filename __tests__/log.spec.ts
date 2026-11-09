@@ -111,44 +111,5 @@ describe('log', () => {
         { duration: 4, name: 'mousedown' },
       ]);
     });
-
-    it('should call logData with FID metrics', () => {
-      jest.useFakeTimers();
-      const logDataSpy = jest.spyOn(log, 'logData');
-      log.logMetric({
-        attribution: {},
-        name: 'FID',
-        rating: 'good',
-        value: 0,
-        navigationType: 'navigate',
-      });
-      jest.advanceTimersByTime(10000);
-      expect(logDataSpy.mock.calls.length).toEqual(1);
-      expect(logDataSpy).toHaveBeenCalledWith('dataConsumption', {
-        beacon: 0,
-        css: 0,
-        fetch: 0,
-        img: 0,
-        other: 0,
-        script: 0,
-        total: 0,
-        xmlhttprequest: 0,
-      });
-    });
-
-    it('should not call logData with FID metrics if visibility did change', () => {
-      jest.useFakeTimers();
-      const logDataSpy = jest.spyOn(log, 'logData');
-      onVisibilityChange.visibility.didChange = true;
-      log.logMetric({
-        attribution: {},
-        name: 'FID',
-        rating: 'good',
-        value: 0,
-        navigationType: 'navigate',
-      });
-      jest.advanceTimersByTime(10000);
-      expect(logDataSpy.mock.calls.length).toEqual(0);
-    });
   });
 });

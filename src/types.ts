@@ -4,17 +4,7 @@ export interface Metric {
   /**
    * The name of the metric (in acronym form).
    */
-  name:
-    | 'CLS'
-    | 'FCP'
-    | 'FID'
-    | 'LCP'
-    | 'TTFB'
-    | 'RT'
-    | 'TBT'
-    | 'NTBT'
-    | 'ET'
-    | 'INP';
+  name: 'CLS' | 'FCP' | 'LCP' | 'TTFB' | 'RT' | 'TBT' | 'NTBT' | 'ET' | 'INP';
   /**
    * The current value of the metric.
    */
@@ -77,7 +67,6 @@ interface WebVitalsReportOptions {
   ttfb?: ReportOpts;
   cls?: ReportOpts;
   fcp?: ReportOpts;
-  fid?: ReportOpts;
   lcp?: ReportOpts;
   inp?: ReportOpts;
 }
@@ -209,7 +198,12 @@ export type IPerfumeData =
 export type IVitalsScore = 'good' | 'needsImprovement' | 'poor' | null;
 
 export type INavigationType =
-  'navigate' | 'reload' | 'back-forward' | 'back-forward-cache' | 'prerender';
+  | 'navigate'
+  | 'reload'
+  | 'back-forward'
+  | 'back-forward-cache'
+  | 'prerender'
+  | 'soft-navigation';
 
 export interface IVitalsThresholds {
   vitalsThresholds: [number, number];
