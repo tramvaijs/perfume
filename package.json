@@ -12,7 +12,7 @@
   "author": "Leonardo Zizzamia",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tramvaijs/perfume"
+    "url": "git+https://github.com/tramvaijs/perfume.git"
   },
   "license": "MIT",
   "engines": {
@@ -28,7 +28,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "web-vitals": "^3.5.0"
+    "web-vitals": "^6.2.3"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
@@ -63,8 +63,6 @@
     "fp",
     "first-contentful-paint",
     "fcp",
-    "first-input-delay",
-    "fid",
     "largest-contentful-paint",
     "lcp",
     "cumulative-layout-shift",

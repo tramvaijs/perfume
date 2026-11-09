@@ -2272,7 +2272,7 @@ __metadata:
     ts-jest: "npm:^29.4.15"
     tsdown: "npm:^0.23.1"
     typescript: "npm:^6"
-    web-vitals: "npm:^3.5.0"
+    web-vitals: "npm:^6.2.3"
   languageName: unknown
   linkType: soft
 
@@ -10960,10 +10960,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web-vitals@npm:^3.5.0":
-  version: 3.5.2
-  resolution: "web-vitals@npm:3.5.2"
-  checksum: 10c0/662b385d6e96a18677cf8726454b65f3aecfdca330df72a82f73f293a5708ba9d191964649f8d363a1e64062a826a99805ade8c573a6492b91e02275b6860308
+"web-vitals@npm:^6.2.3":
+  version: 6.2.3
+  resolution: "web-vitals@npm:6.2.3"
+  checksum: 10c0/d7db74ab8503f069db0f697b1b1318670062616a1b46464abde98dc599ffbf71c0080f39bfe739ed122da12f6980fe882d471e86a78fedad61a4bfa1abffa32c
   languageName: node
   linkType: hard
 
