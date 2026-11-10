@@ -5,14 +5,14 @@
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
-  "typings": "dist/types/index.d.ts",
+  "typings": "dist/index.d.ts",
   "files": [
     "dist"
   ],
   "author": "Leonardo Zizzamia",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tramvaijs/perfume"
+    "url": "git+https://github.com/tramvaijs/perfume"
   },
   "license": "MIT",
   "engines": {
