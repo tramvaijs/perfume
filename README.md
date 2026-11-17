@@ -42,7 +42,6 @@ Perfume is a tiny, web performance monitoring library that reports field data ba
 - Time to First Byte ([TTFB](https://web.dev/ttfb/#what-is-a-good-ttfb-score))
 - First Contentful Paint ([FCP](https://web.dev/first-contentful-paint/))
 - Largest Contentful Paint ([LCP](https://web.dev/lcp/))
-- First Input Delay ([FID](https://web.dev/fid/))
 - Cumulative Layout Shift ([CLS](https://web.dev/cls/))
 - Interaction to Next Paint ([INP](https://web.dev/inp/))
 - Total Blocking Time ([TBT](https://web.dev/tbt/))
@@ -85,7 +84,7 @@ import { initPerfume } from 'node_modules/perfume.js/dist/perfume.umd.min.js';
 
 ## Quick start
 
-Metrics like **Navigation Timing**, **Network Information**, **TTFB**, **FCP**, **FID**, **LCP**, **CLS**, **INP** and **TBT** are default reported with Perfume; All results will be reported to the `analyticsTracker` callback, and the code below is just one way for you to organize your tracking, feel free to tweak it suit your needs.
+Metrics like **Navigation Timing**, **Network Information**, **TTFB**, **FCP**, **LCP**, **CLS**, **INP** and **TBT** are default reported with Perfume; All results will be reported to the `analyticsTracker` callback, and the code below is just one way for you to organize your tracking, feel free to tweak it suit your needs.
 
 🚀 Visit [https://zizzamia.github.io/perfume/](https://zizzamia.github.io/perfume/) for a live demo on how the metrics work. 🌕
 
@@ -124,9 +123,6 @@ initPerfume({
         break;
       case 'FCP':
         myAnalyticsTool.track('firstContentfulPaint', { duration: data });
-        break;
-      case 'FID':
-        myAnalyticsTool.track('firstInputDelay', { duration: data });
         break;
       case 'LCP':
         myAnalyticsTool.track('largestContentfulPaint', { duration: data });
@@ -203,6 +199,16 @@ Perfume helps expose some of the key metrics you might need.
 // Perfume.js: fp 1482.00 ms
 ```
 
+### Total Blocking Time (TBT)
+
+TBT sums the blocking portions of long tasks between First Contentful Paint (FCP) and Time to Interactive (TTI). Each task is clipped to this interval before subtracting the 50 ms allowance, following [Lighthouse's calculation](https://github.com/ChromeDevTools/devtools-frontend/blob/main/front_end/models/trace/lantern/metrics/TBTUtils.ts).
+
+TTI is estimated by finding a five-second window without long tasks and with at most two concurrent requests reconstructed from completed Resource Timing entries. Its timestamp is the start of the CPU quiet period, bounded by FCP and DOMContentLoaded, following [Lighthouse's observed Interactive metric](https://github.com/GoogleChrome/lighthouse/blob/main/core/computed/metrics/interactive.js). The five-second confirmation period is not added to TTI or TBT.
+
+Perfume reports TBT once per initial document load without waiting for user input. Its attribution contains `firstContentfulPaint` and `timeToInteractive`, in milliseconds relative to the performance time origin. Reporting is cancelled if the page is hidden before TTI is confirmed. TBT requires the Long Tasks API; soft navigations and back/forward cache restores do not reuse the initial load's entries. NTBT continues to work after TBT is reported.
+
+This is a real-user estimate based only on buffered `longtask` and `resource` observers. Resource Timing exposes completed requests, so requests still in flight are invisible and TTI may be detected too early. Results can differ from Lighthouse's full browser trace and simulated throttling. The resource observer is disconnected after reporting or cancellation.
+
 ### Navigation Total Blocking Time (NTBT)
 
 This metric measures the amount of time the application may be blocked from processing code during the 2s window after a user navigates from page A to page B. The NTBT metric is the summation of the blocking time of all long tasks in the 2s window after this method is invoked.
@@ -234,6 +240,8 @@ history.listen(() => {
 
 Resource Timing collects performance metrics for document-dependent resources. Stuff like style sheets, scripts, images, et cetera.
 Perfume helps expose all PerformanceResourceTiming entries and groups data data consumption by Kb used.
+
+`dataConsumption` is reported ten seconds after FCP, independently of TBT and Long Tasks API support. Reporting is skipped if the page was hidden during that time.
 
 ```javascript
 initPerfume({
@@ -387,6 +395,8 @@ const MyComponent = () => {
 
 ## Web Vitals Score
 
+Metrics with thresholds report `good`, `needs-improvement`, or `poor` ratings. Unscored measurements use `null`.
+
 Perfume will expose for all major metrics the vitals score, those can be used to improve your [SEO and Google page rank](https://webmasters.googleblog.com/2020/05/evaluating-page-experience.html).
 
 | Web Vitals                            |   Good | Needs Improvement |      Poor |
@@ -395,7 +405,6 @@ Perfume will expose for all major metrics the vitals score, those can be used to
 | Redirect Time (RT)                    |  0-100 |           101-200 |  Over 200 |
 | First Contentful Paint (FCP)          | 0-2000 |         2001-4000 | Over 4000 |
 | Largest Contentful Paint (LCP)        | 0-2500 |         2501-4000 | Over 4000 |
-| First Input Delay (FID)               |  0-100 |           101-300 |  Over 300 |
 | Cumulative Layout Shift (CLS)         |  0-0.1 |         0.11-0.25 | Over 0.25 |
 | Interaction to Next Paint (INP)       |  0-200 |           201-500 |  Over 500 |
 | Total Blocking Time (TBT)             |  0-200 |           201-600 |  Over 600 |
@@ -434,7 +443,7 @@ A quick way to see your page speed results on your web app is by using Google An
 Have fun ✨
 
 ```javascript
-const metricNames = ['TTFB', 'RT', 'FCP', 'LCP', 'FID', 'CLS', 'TBT'];
+const metricNames = ['TTFB', 'RT', 'FCP', 'LCP', 'INP', 'CLS', 'TBT'];
 initPerfume({
   analyticsTracker: ({ attribution, metricName, data, navigatorInformation, rating, navigationType }) => {
     if (metricNames.includes(metricName)) {

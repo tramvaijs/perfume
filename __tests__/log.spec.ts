@@ -3,11 +3,11 @@
  */
 import { C, WN, WP } from '../src/constants';
 import * as log from '../src/log';
+import { rt } from '../src/metrics';
+import { visibility } from '../src/onVisibilityChange';
 import * as reportPerf from '../src/reportPerf';
-import * as totalBlockingTime from '../src/totalBlockingTime';
 import * as utils from '../src/utils';
 import mock from './_mock';
-import * as onVisibilityChange from '../src/onVisibilityChange';
 
 jest.mock('../src/onVisibilityChange', () => {
   const originalModule = jest.requireActual('../src/onVisibilityChange');
@@ -24,12 +24,16 @@ describe('log', () => {
   let spy: jest.SpyInstance;
 
   beforeEach(() => {
+    jest.useFakeTimers();
+    visibility.didChange = false;
     (WN as any) = mock.navigator();
     (WP as any) = mock.performance();
     (C as any).log = (n: any) => n;
   });
 
   afterEach(() => {
+    jest.clearAllTimers();
+    jest.useRealTimers();
     if (spy) {
       spy.mockReset();
       spy.mockRestore();
@@ -83,72 +87,43 @@ describe('log', () => {
       expect(spy.mock.calls.length).toEqual(0);
     });
 
-    it('should call initTotalBlockingTime only once', () => {
-      const tbtSpy = jest.spyOn(totalBlockingTime, 'initTotalBlockingTime');
-
-      (window as any).PerformanceObserver = mock.PerformanceObserver;
-
-      // FCP and LCP both trigger TBT measurement
+    it('reports data consumption after FCP without depending on TBT observation', () => {
+      spy = jest.spyOn(log, 'logData');
       log.logMetric({
-        attribution: {},
         name: 'FCP',
+        value: 100,
         rating: 'good',
-        value: 1,
-        navigationType: 'navigate',
-      });
-      log.logMetric({
         attribution: {},
-        name: 'LCP',
-        rating: 'good',
-        value: 1,
-        navigationType: 'navigate',
       });
-
-      expect(tbtSpy.mock.calls.length).toEqual(1);
-      expect(tbtSpy).toHaveBeenCalledWith([
-        { name: 'first-paint', startTime: 1 },
-        { name: 'first-contentful-paint', startTime: 1 },
-        { duration: 4, name: 'mousedown' },
-      ]);
+      jest.advanceTimersByTime(9999);
+      expect(spy).not.toHaveBeenCalled();
+      jest.advanceTimersByTime(1);
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenCalledWith('dataConsumption', rt.value);
     });
 
-    it('should call logData with FID metrics', () => {
-      jest.useFakeTimers();
-      const logDataSpy = jest.spyOn(log, 'logData');
+    it('does not report data consumption if the page was hidden', () => {
+      spy = jest.spyOn(log, 'logData');
       log.logMetric({
-        attribution: {},
-        name: 'FID',
+        name: 'FCP',
+        value: 100,
         rating: 'good',
-        value: 0,
-        navigationType: 'navigate',
+        attribution: {},
       });
+      visibility.didChange = true;
       jest.advanceTimersByTime(10000);
-      expect(logDataSpy.mock.calls.length).toEqual(1);
-      expect(logDataSpy).toHaveBeenCalledWith('dataConsumption', {
-        beacon: 0,
-        css: 0,
-        fetch: 0,
-        img: 0,
-        other: 0,
-        script: 0,
-        total: 0,
-        xmlhttprequest: 0,
-      });
+      expect(spy).not.toHaveBeenCalled();
     });
 
-    it('should not call logData with FID metrics if visibility did change', () => {
-      jest.useFakeTimers();
-      const logDataSpy = jest.spyOn(log, 'logData');
-      onVisibilityChange.visibility.didChange = true;
+    it('does not schedule another data consumption report for a soft navigation', () => {
       log.logMetric({
-        attribution: {},
-        name: 'FID',
+        name: 'FCP',
+        value: 100,
         rating: 'good',
-        value: 0,
-        navigationType: 'navigate',
+        attribution: {},
+        navigationType: 'soft-navigation',
       });
-      jest.advanceTimersByTime(10000);
-      expect(logDataSpy.mock.calls.length).toEqual(0);
+      expect(jest.getTimerCount()).toBe(0);
     });
   });
 });
