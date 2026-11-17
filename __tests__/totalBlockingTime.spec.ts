@@ -137,7 +137,7 @@ describe('TBT reporting', () => {
       value: 100,
       rating: 'good',
       navigationType: 'navigate',
-      attribution: { firstContentfulPaint: 100, timeToInteractive: 400 },
+      attribution: {},
     });
   });
 
