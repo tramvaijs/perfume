@@ -1,20 +1,15 @@
-import type { ReportOpts } from 'web-vitals';
+import type {
+  Metric as WebVitalsMetric,
+  AttributionReportOpts,
+  INPAttributionReportOpts,
+  LCPAttributionReportOpts,
+} from 'web-vitals/attribution';
 
 export interface Metric {
   /**
    * The name of the metric (in acronym form).
    */
-  name:
-    | 'CLS'
-    | 'FCP'
-    | 'FID'
-    | 'LCP'
-    | 'TTFB'
-    | 'RT'
-    | 'TBT'
-    | 'NTBT'
-    | 'ET'
-    | 'INP';
+  name: 'CLS' | 'FCP' | 'LCP' | 'TTFB' | 'RT' | 'TBT' | 'NTBT' | 'ET' | 'INP';
   /**
    * The current value of the metric.
    */
@@ -59,9 +54,7 @@ export interface Metric {
    * can be sent along with the metric value for the current page visit in
    * order to help identify issues happening to real-users in the field.
    */
-  attribution: {
-    [key: string]: unknown;
-  };
+  attribution: object;
 }
 
 export interface IAnalyticsTrackerOptions {
@@ -74,12 +67,11 @@ export interface IAnalyticsTrackerOptions {
 }
 
 interface WebVitalsReportOptions {
-  ttfb?: ReportOpts;
-  cls?: ReportOpts;
-  fcp?: ReportOpts;
-  fid?: ReportOpts;
-  lcp?: ReportOpts;
-  inp?: ReportOpts;
+  ttfb?: AttributionReportOpts;
+  cls?: AttributionReportOpts;
+  fcp?: AttributionReportOpts;
+  lcp?: LCPAttributionReportOpts;
+  inp?: INPAttributionReportOpts;
 }
 
 export interface IPerfumeConfig {
@@ -206,10 +198,9 @@ export interface IPerfumeDataConsumption {
 export type IPerfumeData =
   number | IPerfumeNavigationTiming | IPerfumeNetworkInformation;
 
-export type IVitalsScore = 'good' | 'needsImprovement' | 'poor' | null;
+export type IVitalsScore = WebVitalsMetric['rating'] | null;
 
-export type INavigationType =
-  'navigate' | 'reload' | 'back-forward' | 'back-forward-cache' | 'prerender';
+export type INavigationType = WebVitalsMetric['navigationType'];
 
 export interface IVitalsThresholds {
   vitalsThresholds: [number, number];

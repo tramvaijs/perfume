@@ -4,6 +4,9 @@ export const metrics: IMetricMap = {};
 export const fcp = {
   value: 0,
 };
+export const tti: { value: number | undefined } = {
+  value: undefined,
+};
 export const rt: { value: IPerfumeDataConsumption } = {
   value: {
     beacon: 0,
