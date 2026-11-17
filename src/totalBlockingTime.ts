@@ -111,10 +111,7 @@ export const initTotalBlockingTime = (
       name: 'TBT',
       value: tbt.value,
       rating: getVitalsScore('TBT', tbt.value),
-      attribution: {
-        firstContentfulPaint: fcp.value,
-        timeToInteractive: tti.value,
-      },
+      attribution: {},
       navigationType: report.navigationType,
     });
   };
