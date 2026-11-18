@@ -40,7 +40,7 @@ export const getRating = (
   if (value <= vitalsThresholds[0]) {
     return 'good';
   }
-  return value <= vitalsThresholds[1] ? 'needsImprovement' : 'poor';
+  return value <= vitalsThresholds[1] ? 'needs-improvement' : 'poor';
 };
 
 export const getVitalsScore = (
@@ -53,5 +53,5 @@ export const getVitalsScore = (
   if (value <= webVitalsScore[measureName][0]) {
     return 'good';
   }
-  return value <= webVitalsScore[measureName][1] ? 'needsImprovement' : 'poor';
+  return value <= webVitalsScore[measureName][1] ? 'needs-improvement' : 'poor';
 };

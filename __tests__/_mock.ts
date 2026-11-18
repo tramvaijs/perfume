@@ -47,6 +47,7 @@ export class MockPerformanceObserver {
     };
   }
   disconnect() {}
+  takeRecords() { return []; }
 }
 
 export default {

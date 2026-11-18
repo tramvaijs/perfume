@@ -90,7 +90,7 @@ describe('reportPerf', () => {
     it('should call analyticsTracker() with customProperties', () => {
       config.analyticsTracker = () => {};
       spy = jest.spyOn(config, 'analyticsTracker');
-      reportPerf('TBT', 423, 'needsImprovement', { mare: 'sea' });
+      reportPerf('TBT', 423, 'needs-improvement', { mare: 'sea' });
       expect(spy.mock.calls.length).toEqual(1);
       expect(spy).toHaveBeenCalledWith({
         metricName: 'TBT',
@@ -103,7 +103,7 @@ describe('reportPerf', () => {
           isLowEndExperience: false,
           serviceWorkerStatus: 'unsupported',
         },
-        rating: 'needsImprovement',
+        rating: 'needs-improvement',
       });
     });
 
@@ -116,7 +116,7 @@ describe('reportPerf', () => {
       (W as any).requestIdleCallback = (cb: Function) => tasks.push(cb);
 
       const immediatelyReportedMetrics = ['CLS', 'INP'];
-      const delayedMetrics = ['TTFB', 'FCP', 'LCP', 'FID', 'TBT'];
+      const delayedMetrics = ['TTFB', 'FCP', 'LCP', 'TBT'];
       const defaultData = {
         data: 123,
         attribution: {},
