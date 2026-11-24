@@ -29,14 +29,15 @@ const entry = (startTime: number, duration: number) => ({
 
 describe('calculateTotalBlockingTime', () => {
   it.each([
-    [[], 0],
-    [[{ start: 100, end: 150 }], 0],
+    [[], 0, 0],
+    [[{ start: 100, end: 150 }], 0, 0],
     [
       [
         { start: 100, end: 160 },
         { start: 200, end: 280 },
       ],
       40,
+      2,
     ],
     [
       [
@@ -44,26 +45,33 @@ describe('calculateTotalBlockingTime', () => {
         { start: 1100, end: 1300 },
       ],
       0,
+      0,
     ],
     // Clip each task to FCP/TTI before subtracting 50ms, like Lighthouse.
-    [[{ start: 0, end: 180 }], 30],
-    [[{ start: 950, end: 1200 }], 0],
-    [[{ start: 900, end: 1200 }], 50],
+    [[{ start: 0, end: 180 }], 30, 1],
+    [[{ start: 950, end: 1200 }], 0, 0],
+    [[{ start: 900, end: 1200 }], 50, 1],
   ])(
     'sums only blocking time inside the measurement window (%j)',
-    (tasks, expected) => {
+    (tasks, expectedTbt, expectedCount) => {
       expect(
         calculateTotalBlockingTime(
           tasks.map(({ start, end }) => entry(start, end - start)),
           100,
           1000,
         ),
-      ).toBe(expected);
+      ).toEqual({
+        totalBlockingTime: expectedTbt,
+        longTaskCount: expectedCount,
+      });
     },
   );
 
   it('returns zero for an empty measurement window', () => {
-    expect(calculateTotalBlockingTime([entry(0, 200)], 100, 100)).toBe(0);
+    expect(calculateTotalBlockingTime([entry(0, 200)], 100, 100)).toEqual({
+      totalBlockingTime: 0,
+      longTaskCount: 0,
+    });
   });
 });
 
@@ -137,7 +145,9 @@ describe('TBT reporting', () => {
       value: 100,
       rating: 'good',
       navigationType: 'navigate',
-      attribution: {},
+      attribution: {
+        longTaskCount: 2,
+      },
     });
   });
 
