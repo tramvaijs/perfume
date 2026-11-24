@@ -17,16 +17,21 @@ export const calculateTotalBlockingTime = (
   tasks: TimingEntry[],
   start: number,
   end: number,
-): number => {
-  let total = 0;
+): { totalBlockingTime: number; longTaskCount: number } => {
+  let totalBlockingTime = 0;
+  let longTaskCount = 0;
 
   for (const task of tasks) {
     const clippedStart = Math.max(task.startTime, start);
     const clippedEnd = Math.min(task.startTime + task.duration, end);
-    total += Math.max(0, clippedEnd - clippedStart - 50);
+    const blockingTime = Math.max(0, clippedEnd - clippedStart - 50);
+    if (blockingTime > 0) {
+      totalBlockingTime += blockingTime;
+      longTaskCount += 1;
+    }
   }
 
-  return total;
+  return { totalBlockingTime, longTaskCount };
 };
 
 export const initTotalBlockingTime = (
@@ -104,14 +109,21 @@ export const initTotalBlockingTime = (
       return;
     }
 
-    tbt.value = calculateTotalBlockingTime(longTasks, fcp.value, tti.value);
+    const { totalBlockingTime, longTaskCount } = calculateTotalBlockingTime(
+      longTasks,
+      fcp.value,
+      tti.value,
+    );
+    tbt.value = totalBlockingTime;
     stop();
 
     logMetric({
       name: 'TBT',
       value: tbt.value,
       rating: getVitalsScore('TBT', tbt.value),
-      attribution: {},
+      attribution: {
+        longTaskCount,
+      },
       navigationType: report.navigationType,
     });
   };
