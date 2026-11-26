@@ -48,6 +48,18 @@ export interface Metric {
    * value will be 'back-forward-cache'.
    */
   navigationType?: INavigationType;
+  /**
+   * The navigationId of the navigation the metric happened for.
+   * Particularly relevant for soft navigations, where the metric
+   * may be reported for a previous navigation.
+   */
+  navigationId?: number;
+  /**
+   * The URL of the navigation the metric happened for. Particularly
+   * relevant for soft navigations, where location.href may already
+   * point to the next route when the metric is reported.
+   */
+  navigationURL?: string;
 
   /**
    * An object containing potentially-helpful debugging information that
@@ -64,6 +76,17 @@ export interface IAnalyticsTrackerOptions {
   navigatorInformation: INavigatorInfo;
   rating: IVitalsScore;
   navigationType?: INavigationType;
+  /**
+   * The navigationId of the navigation the metric belongs to,
+   * defined for web-vitals reports
+   */
+  navigationId?: number;
+  /**
+   * The URL of the navigation the metric belongs to, defined for
+   * web-vitals reports: use it instead of location.href, which may
+   * already point to the next route for a metric of the previous one
+   */
+  navigationURL?: string;
 }
 
 interface WebVitalsReportOptions {

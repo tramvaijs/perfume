@@ -88,6 +88,45 @@ describe('observe', () => {
     expect(tbt.initTotalBlockingTime).toHaveBeenCalledWith(report);
   });
 
+  it('filters out the dummy 0 TTFB reported for soft navigations', () => {
+    // web-vitals reports TTFB as 0 for every soft navigation, because
+    // TTFB is a hard-navigation-only metric: the 0 must be dropped
+    // before it reaches the tracker
+    const logSpy = jest.spyOn(log, 'logMetric').mockImplementation(() => {});
+    initPerformanceObserver();
+    const callback = jest.mocked(onTTFB).mock.calls[0][0];
+    const report = {
+      name: 'TTFB',
+      value: 0,
+      rating: 'good',
+      navigationType: 'soft-navigation',
+      navigationId: 7,
+      attribution: {},
+    } as unknown as Parameters<typeof callback>[0];
+    callback(report);
+    expect(logSpy).not.toHaveBeenCalled();
+    logSpy.mockRestore();
+  });
+
+  it('passes a soft navigation FCP report through to logMetric and TBT reporting', () => {
+    const logSpy = jest.spyOn(log, 'logMetric').mockImplementation(() => {});
+    initPerformanceObserver();
+    const callback = jest.mocked(onFCP).mock.calls[0][0];
+    const report = {
+      name: 'FCP',
+      value: 1200,
+      rating: 'good',
+      navigationType: 'soft-navigation',
+      navigationId: 7,
+      navigationURL: '/product',
+      attribution: {},
+    } as unknown as Parameters<typeof callback>[0];
+    callback(report);
+    expect(logSpy).toHaveBeenCalledWith(report);
+    expect(tbt.initTotalBlockingTime).toHaveBeenCalledWith(report);
+    logSpy.mockRestore();
+  });
+
   describe('initPerformanceObserver()', () => {
     describe.each`
       resourceTiming | elementTiming | calls

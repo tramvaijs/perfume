@@ -60,7 +60,15 @@ describe('log', () => {
         navigationType: 'navigate',
       });
       expect(spy.mock.calls.length).toEqual(1);
-      expect(spy).toHaveBeenCalledWith('CLS', 0, 'good', {}, 'navigate');
+      expect(spy).toHaveBeenCalledWith(
+        'CLS',
+        0,
+        'good',
+        {},
+        'navigate',
+        undefined,
+        undefined,
+      );
     });
 
     it('should call reportPerf() with the correct arguments', () => {
@@ -73,7 +81,37 @@ describe('log', () => {
         navigationType: 'navigate',
       });
       expect(spy.mock.calls.length).toEqual(1);
-      expect(spy).toHaveBeenCalledWith('FCP', 1, 'good', {}, 'navigate');
+      expect(spy).toHaveBeenCalledWith(
+        'FCP',
+        1,
+        'good',
+        {},
+        'navigate',
+        undefined,
+        undefined,
+      );
+    });
+
+    it('should pass soft navigation attribution to reportPerf()', () => {
+      spy = jest.spyOn(reportPerf, 'reportPerf');
+      log.logMetric({
+        attribution: {},
+        name: 'CLS',
+        rating: 'good',
+        value: 42,
+        navigationType: 'soft-navigation',
+        navigationId: 3,
+        navigationURL: '/product',
+      });
+      expect(spy).toHaveBeenCalledWith(
+        'CLS',
+        42,
+        'good',
+        {},
+        'soft-navigation',
+        3,
+        '/product',
+      );
     });
 
     it('should not call reportPerf() when duration is higher of config.maxTime', () => {
@@ -124,6 +162,58 @@ describe('log', () => {
         navigationType: 'soft-navigation',
       });
       expect(jest.getTimerCount()).toBe(0);
+    });
+
+    it('should report FCP for a soft navigation', () => {
+      // Soft navigation values are relative to the navigation start,
+      // not to the initial page load, so they pass the maxTime filter:
+      // only the data consumption report is skipped, the metric is not
+      spy = jest.spyOn(reportPerf, 'reportPerf');
+      log.logMetric({
+        attribution: {},
+        name: 'FCP',
+        rating: 'good',
+        value: 1200,
+        navigationType: 'soft-navigation',
+        navigationId: 7,
+        navigationURL: '/product',
+      });
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenCalledWith(
+        'FCP',
+        1200,
+        'good',
+        {},
+        'soft-navigation',
+        7,
+        '/product',
+      );
+      expect(jest.getTimerCount()).toBe(0);
+    });
+
+    it('should keep the initial load data consumption report when a soft navigation follows', () => {
+      spy = jest.spyOn(log, 'logData');
+      log.logMetric({
+        attribution: {},
+        name: 'FCP',
+        rating: 'good',
+        value: 100,
+        navigationType: 'navigate',
+      });
+      log.logMetric({
+        attribution: {},
+        name: 'FCP',
+        rating: 'good',
+        value: 1200,
+        navigationType: 'soft-navigation',
+        navigationId: 7,
+        navigationURL: '/product',
+      });
+      // The soft navigation must not schedule a second report
+      expect(jest.getTimerCount()).toBe(1);
+      jest.advanceTimersByTime(10000);
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenCalledWith('dataConsumption', rt.value);
     });
   });
 });

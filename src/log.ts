@@ -29,6 +29,8 @@ export const logMetric = ({
   rating,
   value,
   navigationType,
+  navigationId,
+  navigationURL,
 }: Metric): void => {
   if (name === 'FCP' && navigationType !== 'soft-navigation') {
     setTimeout(() => {
@@ -40,6 +42,14 @@ export const logMetric = ({
   const duration2Decimal = roundByFour(value);
   if (duration2Decimal <= config.maxTime && duration2Decimal >= 0) {
     // Sends the metric to an external tracking service
-    reportPerf(name, duration2Decimal, rating, attribution, navigationType);
+    reportPerf(
+      name,
+      duration2Decimal,
+      rating,
+      attribution,
+      navigationType,
+      navigationId,
+      navigationURL,
+    );
   }
 };

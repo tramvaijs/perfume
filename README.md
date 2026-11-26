@@ -100,6 +100,10 @@ initPerfume({
       navigatorInformation,
       rating,
       navigationType,
+      // For soft navigations the metric may be reported for the previous
+      // route: use navigationURL and navigationId instead of location.href
+      navigationId,
+      navigationURL,
     } = options;
     switch (metricName) {
       case 'navigationTiming':
