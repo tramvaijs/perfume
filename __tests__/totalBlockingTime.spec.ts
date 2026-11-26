@@ -201,4 +201,31 @@ describe('TBT reporting', () => {
       expect(jest.getTimerCount()).toBe(0);
     },
   );
+
+  it('keeps measuring initial-load TBT when a soft navigation follows', () => {
+    initTotalBlockingTime(report);
+    recordLongTasks([entry(300, 100)]);
+
+    // A soft navigation to another route must not disturb the
+    // ongoing initial-load TBT measurement
+    initTotalBlockingTime({
+      ...report,
+      navigationType: 'soft-navigation',
+      navigationURL: '/product',
+    } as FCPMetricWithAttribution);
+
+    expect(observerSpy).toHaveBeenCalledTimes(1);
+    advance(5000);
+    expect(reportSpy).not.toHaveBeenCalled();
+    advance(1000);
+    expect(reportSpy).toHaveBeenCalledWith({
+      name: 'TBT',
+      value: 50,
+      rating: 'good',
+      navigationType: 'navigate',
+      attribution: {
+        longTaskCount: 1,
+      },
+    });
+  });
 });

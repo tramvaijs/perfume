@@ -5,6 +5,13 @@ import { IVitalsScore, INavigationType } from './types';
 import { pushTask } from './utils';
 
 /**
+ * Metrics that web-vitals finalizes when the page becomes hidden or
+ * closed. They have to be sent to the tracker synchronously: a task
+ * deferred via requestIdleCallback may never run on a hidden page.
+ */
+const IMMEDIATE_METRICS = ['CLS', 'INP', 'LCP'];
+
+/**
  * Sends the User timing measure to analyticsTracker
  */
 export const reportPerf = (
@@ -13,13 +20,16 @@ export const reportPerf = (
   rating: IVitalsScore,
   attribution: object,
   navigationType?: INavigationType,
+  navigationId?: number,
+  navigationURL?: string,
 ): void => {
   const reportTask = () => {
     if (!config.analyticsTracker) {
       return;
     }
-    // Doesn't send timing when page is hidden
-    if (visibility.isHidden && !['CLS', 'INP'].includes(measureName)) {
+    // Doesn't send timing when page is hidden, except for the metrics
+    // that web-vitals finalizes at that moment
+    if (visibility.isHidden && !IMMEDIATE_METRICS.includes(measureName)) {
       return;
     }
     // Send metric to custom Analytics service
@@ -30,12 +40,14 @@ export const reportPerf = (
       navigatorInformation: getNavigatorInfo(),
       rating,
       navigationType,
+      navigationId,
+      navigationURL,
     });
   };
 
-  // Send CLS and INP metrics immediately,
-  // because this metrics are reported when page is hidden or closed
-  if (['CLS', 'INP'].includes(measureName)) {
+  // Send metrics finalized on page hide or close immediately,
+  // because they may be the last value this page ever reports
+  if (IMMEDIATE_METRICS.includes(measureName)) {
     reportTask();
   } else {
     pushTask(reportTask);
